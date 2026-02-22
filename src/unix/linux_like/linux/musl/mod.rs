@@ -5,7 +5,11 @@ pub type pthread_t = *mut c_void;
 pub type clock_t = c_long;
 #[cfg(musl32_time64)]
 pub type time_t = i64;
+// Hexagon musl uses 64-bit time_t (__USE_TIME_BITS64 / _Int64 = long long)
+#[cfg(all(not(musl32_time64), target_arch = "hexagon"))]
+pub type time_t = c_longlong;
 #[cfg(not(musl32_time64))]
+#[cfg(not(target_arch = "hexagon"))]
 #[cfg_attr(
     not(feature = "rustc-dep-of-std"),
     deprecated(
